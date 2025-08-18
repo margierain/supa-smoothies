@@ -1,43 +1,50 @@
 import supabase from "../config/supabaseClient";
 import { useEffect, useState } from "react";
 
+// Components
+import { SmoothieCard } from "../components/SmoothieCard";
+
 const Home = () => {
   console.log(supabase);
   const [fetchError, setFetchError] = useState(null)
-  const [smoothies, setSmoothies] = useState(null)
+  const [smoothies, setSmoothies] = useState([])
 
   useEffect(() => {
     const fetchSmoothies = async () => {
-      const  {data, error} = await supabase
-      .from('smoothies')
-      .select()
+      const { data, error } = await supabase
+        .from('smoothies')
+        .select('*')
 
-      if(error) {
+      if (error) {
         setFetchError('Could not fetch the smoothies')
-        setSmoothies(null)
+        setSmoothies([])
         console.log(error)
       }
 
-      if(data){
-        setSmoothies(data)
+      if (data) {
+        setSmoothies(data ?? [])
         setFetchError(null)
       }
     }
     fetchSmoothies()
   }, [])
 
+
   return (
     <div className="page home">
       {
         fetchError && (<p>{fetchError}</p>)
       }
-      {smoothies && (<div className="smoothies">
-        {smoothies.map(smoothies => (
-          <p>{smoothies.title}</p>
-        ))}
-      </div>)}
+      {smoothies && (
+        <div className="smoothies">
+          <div className="smoothie-grid">
+            {smoothies.map(smoothies => (
+              <SmoothieCard key={smoothies.id} smoothies={smoothies} />
+            ))}
+          </div>
+        </div>)}
     </div>
   )
 }
 
-export default Home
+export default Home;
