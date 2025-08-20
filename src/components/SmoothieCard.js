@@ -1,7 +1,6 @@
 
 
 export const SmoothieCard = ({smoothies}) => {
-    console.log(smoothies, 'dance')
     return(
         <div className="smoothie-card">
             <h3>{smoothies.title}</h3>
